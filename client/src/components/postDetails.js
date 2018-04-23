@@ -22,9 +22,18 @@ class postDetails extends Component{
     }
     
     onDelete(){
-      let postId = this.state.details[0].id
       
-      console.log(this.state.details[0].id)
+      let postId = this.state.details[0].id
+      fetch(`/posts/delete/${postId}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+    }).then(res => {
+        this.props.history.push('/');
+   
+    }).catch(function(err) {
+        console.log(err)
+    });
+   //console.log(this.state.details[0].id)
     }
     render(){
       return (
@@ -32,7 +41,7 @@ class postDetails extends Component{
           <br />
            <Link className="btn grey" to="/">Back </Link> 
            {this.state.details.map(post =>     
-          <div>
+          <div key={post.id}>
             <div className="collection">
             <li className="collection-item">ID: {post.id}</li>
             <li className="collection-item">title: {post.title}</li>
