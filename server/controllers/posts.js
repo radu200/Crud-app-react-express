@@ -44,18 +44,27 @@ module.exports.getPosts = (req, res) => {
   }
   
   
-   module.exports.editPost  = (req, res) => {
-      const title = req.body.title;
-      const description = req.body.description;
-  
-       let posts = {
-        title: title,
-        description: description
-    }
-  
-    db.then((conn) => conn.query('INSERT INTO posts SET ?', posts))
+   module.exports.getEditPost  = (req, res) => {
+    db.then((conn) => conn.query('SELECT * FROM posts WHERE id = ?', [req.params.id]))
       .then(([rows, fields]) =>
         res.json(rows))
+      .catch((err) => {
+        console.log('[mysql error]', err)
+      })
+  }
+   
+  module.exports.postEditPost  = (req, res) => {
+    const title = req.body.title;
+    const description = req.body.description;
+  
+    let posts = {
+      title: title,
+      description: description
+    }
+    db.then((conn) => conn.query(`UPDATE posts SET ?  WHERE id =${req.params.id}` , posts))
+      .then(([rows, fields]) =>
+        console.log('post edit'),
+        res.redirect('/') )
       .catch((err) => {
         console.log('[mysql error]', err)
       })
@@ -66,7 +75,7 @@ module.exports.getPosts = (req, res) => {
   module.exports.deletePost =  (req, res) => {
     db.then((conn) => conn.query(`DELETE FROM posts WHERE  id =${req.params.id}`))
       .then(([rows, fields]) =>
-        res.json(rows))
+       console.log('post deleted'))
       .catch((err) => {
         console.log('[mysql error]', err)
       })

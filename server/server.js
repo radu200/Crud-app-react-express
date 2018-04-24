@@ -21,7 +21,8 @@ app.use(bodyParser.urlencoded({
 app.get('/posts', post.getPosts)
 app.post('/posts/add', post.addPost)
 app.get('/posts/:id', post.getDetailPage)
-app.get('/posts/edit', post.editPost)
+app.get('/posts/edit/:id', post.getEditPost)
+app.post('/posts/edit/:id', post.postEditPost)
 app.post('/posts/delete/:id', post.deletePost)
 
 

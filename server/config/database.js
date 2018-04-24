@@ -11,13 +11,6 @@ var mysql = require('mysql2/promise');
     console.log('database connection',err)
   })
   
-
-
-
-  
-
-
-
   module.exports = connection;
 
   
