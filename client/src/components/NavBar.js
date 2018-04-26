@@ -1,29 +1,52 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import {List, ListItem} from 'material-ui/List';
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import PeopleIcon from 'material-ui/svg-icons/social/people';
+import PersonAddIcon from 'material-ui/svg-icons/social/person-add'
+import Divider from 'material-ui/Divider';
+import FlatButton from 'material-ui/FlatButton';
+
 
 class Navbar extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {open: false};
+  }
+
+  handleToggle = () => this.setState({open: !this.state.open});
+  handleClose = () => this.setState({open: false})
+ 
+ 
+ 
   render(){
     return (
       <div>
-        <nav className="blue darken-3">
-          <div className="nav-wrapper">
-            <a href="/" className="brand-logo center">Posts</a>
-            <a data-activates="main-menu" className="button-collapse show-on-large">
-              <i className="fa fa-bars"></i>
-              </a>
-               <ul className="right hide-on-small-only">
-              <li><Link to="/"><i className="fa fa-users"></i> MainPage</Link></li>         
-            </ul>
-            <ul className="side-nav" id="main-menu">
-            <li><Link to="/"><i className="fa fa-users"></i>All  posts</Link></li>  
-            <li><Link to="/posts/add"><i className="fa fa-plus"></i> Add post</Link></li>  
-            <li><Link to="/about"><i className="fa fa-question-circle"></i> About</Link></li> 
-            </ul>
-          </div>
-        </nav>
-      </div>
+          <AppBar title="Title"
+          onLeftIconButtonClick={this.handleToggle}
+          iconElementRight={ 
+          <FlatButton label="Add New Employee" containerElement={<Link to="/employee/add"/>} />
+           } />
+         <Drawer
+          docked={false}
+          width={250}
+          open={this.state.open}
+         
+          onRequestChange={(open) => this.setState({open})} >
+          <ListItem primaryText="Employees" onClick={this.handleClose}  containerElement={<Link to="/" />} leftIcon={<PeopleIcon />} />
+          
+          <Divider />
+          <List>
+            <ListItem primaryText="Add Employee"  onClick={this.handleClose}   containerElement={<Link to="/employee/add" />}leftIcon={<PersonAddIcon />}  />
+            <ListItem primaryText="About Us" onClick={this.handleClose}   containerElement={<Link to="/about" />} leftIcon={<ContentInbox />} />
+         </List>
+        </Drawer>
+        </div>
     )
   }
 }
 
 export default Navbar;
+

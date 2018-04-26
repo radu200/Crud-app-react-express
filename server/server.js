@@ -3,13 +3,14 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const path = require('path');
 const http = require('http');
+const expressValidator = require('express-validator');
 const app = express();
 require('dotenv').config({
   path: '.env'
 })
 
 //controllers
-const post = require('./controllers/posts.js')
+const employees = require('./controllers/employees.js')
 
 
 
@@ -17,16 +18,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+app.use(expressValidator({}));
+
 //routes
-app.get('/posts', post.getPosts)
-app.post('/posts/add', post.addPost)
-app.get('/posts/:id', post.getDetailPage)
-app.get('/posts/edit/:id', post.getEditPost)
-app.post('/posts/edit/:id', post.postEditPost)
-app.post('/posts/delete/:id', post.deletePost)
-
-
+app.get('/employees', employees.getEmployees)
+app.post('/employee/add', employees.addEmployee)
+app.get('/employee/:id', employees.getEmployeeDetails)
+app.get('/employee/edit/:id', employees.getEditEmployee )
+app.post('/employee/edit/:id', employees.postEditeEmployee  )
+app.post('/employee/delete/:id', employees.deleteEmployee)
 
 const port = 5000;
-
 app.listen(port, () => `Server running on port ${port}`);

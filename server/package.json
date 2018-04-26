@@ -20,6 +20,9 @@
     "concurrently": "^3.5.1",
     "dotenv": "5.0.1",
     "express": "^4.16.2",
-    "mysql2": "1.5.3"
+    "express-validator": "5.1.2",
+    "moment": "^2.22.1",
+    "mysql2": "1.5.3",
+    "react-moment": "^0.7.0"
   }
 }

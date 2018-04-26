@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
-import './App.css';
-import Routes from './components/routes';
-import Navbar from './components/NavBar';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+import './App.css';
+import Routes from './components/Routes';
+import NavBar from './components/NavBar';
 import { Link } from 'react-router-dom';
 
 
-const App = () => (
-  <div>
-    <Navbar />
-    <div className="container">
-      <Routes />
-    </div>
-    <div className="fixed-action-btn">
-      <Link to="/posts/add" className="btn-floating btn-large red">
-        <i className="fa fa-plus"></i>
-      </Link>
-    </div>
-  </div>
-)
+
+
+class App extends Component {
+  render() {
+    return (
+      <MuiThemeProvider>
+        <div>
+          <NavBar />
+          <Routes/>
+         
+        </div>
+      </MuiThemeProvider>
+    );
+  }
+}
+
 
 export default App;
