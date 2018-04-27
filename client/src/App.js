@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import './App.css';
-import Routes from './components/Routes';
+import Routes from './routes/Routes';
 import NavBar from './components/NavBar';
 import { Link } from 'react-router-dom';
 

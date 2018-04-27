@@ -1,0 +1,21 @@
+.container_login{
+    margin: 0 auto;
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .container_login .card-heading {
+    padding: 16px;
+  }
+  
+  .container_login .field-line, .button-line {
+    padding: 16px;
+  }
+  @media all and (max-width:600px){
+    .container_login{
+        margin: 0 auto;
+        text-align: center;
+        width: 95%;
+      }
+    
+  }

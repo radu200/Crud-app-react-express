@@ -41,6 +41,8 @@ class Navbar extends Component{
           <List>
             <ListItem primaryText="Add Employee"  onClick={this.handleClose}   containerElement={<Link to="/employee/add" />}leftIcon={<PersonAddIcon />}  />
             <ListItem primaryText="About Us" onClick={this.handleClose}   containerElement={<Link to="/about" />} leftIcon={<ContentInbox />} />
+            <ListItem primaryText="LogIn" onClick={this.handleClose}   containerElement={<Link to="/login" />} leftIcon={<ContentInbox />} />
+            <ListItem primaryText="SignUp" onClick={this.handleClose}   containerElement={<Link to="/signup" />} leftIcon={<ContentInbox />} />
          </List>
         </Drawer>
         </div>

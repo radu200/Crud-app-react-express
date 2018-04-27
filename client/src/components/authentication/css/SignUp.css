@@ -1,0 +1,31 @@
+.error-message {
+    padding: 0 16px;
+    color: tomato;
+  }
+  
+  .success-message {
+    padding: 0 16px;
+    color: green;
+  }
+
+  .container_sign_up{
+    margin: 0 auto;
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .container_sign_up .card-heading {
+    padding: 16px;
+  }
+  
+  .container_sign_up .field-line, .button-line {
+    padding: 16px;
+  }
+  @media all and (max-width:600px){
+    .container_sign_up{
+        margin: 0 auto;
+        text-align: center;
+        width: 95%;
+      }
+    
+  }
