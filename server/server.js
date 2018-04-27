@@ -9,6 +9,10 @@ require('dotenv').config({
   path: '.env'
 })
 
+
+///server react static files for  production 
+app.use(express.static(path.join(__dirname, '../client/build')))
+
 //controllers
 const employees = require('./controllers/employees.js')
 
