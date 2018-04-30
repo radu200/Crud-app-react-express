@@ -10,8 +10,8 @@ import * as moment from 'moment'
 
 
 export default class AddEmployee extends Component {
-   constructor(props){
-         super(props)
+   constructor(){
+         super()
          this.state = {
            FirstName: '',
            LastName:'',
@@ -39,7 +39,7 @@ export default class AddEmployee extends Component {
        
         }
         
-        console.log('state', this.state.Date)
+          console.log('state', this.state.Date)
           fetch('/employee/add',{
               method:'POST',
               headers: {'Content-Type': 'application/json'},
@@ -130,10 +130,5 @@ export default class AddEmployee extends Component {
         </div>
         
         );
-    }
-
-
-
-    
+    }    
 }
-

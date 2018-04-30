@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
-import * as moment from 'moment'
+import PropTypes from 'prop-types';
 import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
 import List, { ListItem, ListItemText } from 'material-ui/List';
@@ -46,13 +46,7 @@ export default class EmployeeDetails extends Component{
    //console.log(this.state.details[0].id)
     }
     render(){
-     const date = this.state.details.map((employee )=> {
-          console.log('date',employee.date_hired)
-          var date = employee.date_hired;
-          var newdate =  moment(date ).format('MMMM Do YYYY')
-         console.log('momemt',newdate)
-         return newdate;
-     } );
+   
       return (
         <div className="container">
            <h1>Employee Details</h1>
@@ -91,3 +85,6 @@ export default class EmployeeDetails extends Component{
   }
 }
 
+EmployeeDetails.protoTypes = {
+  onDelete:PropTypes.func.isRequired
+}
