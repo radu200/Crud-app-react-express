@@ -6,8 +6,10 @@ module.exports.getEmployees = (req, res) => {
         res.json(rows))
        .catch((err) => {
         console.log('[mysql error]', err)
-      })
-  
+      }) 
+
+
+     console.log('data', req.session)
   }
 
 
@@ -35,8 +37,11 @@ module.exports.getEmployees = (req, res) => {
 
     let errors = req.validationErrors();
     if (errors) {
-     return res.send(errors);;
+     return res.status(400).json({
+       errors
+     });
     }
+
     let employees = {
       first_name: FirstName,
       last_name: LastName,

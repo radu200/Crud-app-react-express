@@ -5,7 +5,7 @@ import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import './css/SignUp.css'
-
+import './css/Main.css'
 
 
 
@@ -23,9 +23,9 @@ const SignUpForm = ({
 
       <div className="field-line">
         <TextField
-          floatingLabelText="Name"
-          name="name"
-          errorText={errors.name}
+          floatingLabelText="Username"
+          name="username"
+          errorText={errors.username}
           onChange={onChange}
           value={user.name}
         />
@@ -56,7 +56,7 @@ const SignUpForm = ({
         <RaisedButton type="submit" label="Create New Account" primary />
       </div>
 
-      <CardText>Already have an account? <Link to={'/login'}>Log in</Link></CardText>
+      <CardText>Already have an account? <Link className='link-colors' to={'/login'}>Log in</Link></CardText>
     </form>
   </Card>
 );

@@ -5,6 +5,7 @@ import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import './css/Login.css'
+import './css/Main.css'
 
 
 const LoginForm = ({
@@ -44,7 +45,7 @@ const LoginForm = ({
         <RaisedButton type="submit" label="Log in" primary />
       </div>
 
-      <CardText>Don't have an account? <Link to={'/signup'}>Create one</Link>.</CardText>
+      <CardText >Don't have an account? <Link  className="link-colors" to={'/signup'}>Create one</Link>.</CardText>
     </form>
   </Card>
 );

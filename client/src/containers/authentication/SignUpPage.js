@@ -48,14 +48,43 @@ class SignUpPage extends React.Component {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
 
-    console.log('name:', this.state.user.username);
+    console.log('username:', this.state.user.username);
     console.log('email:', this.state.user.email);
     console.log('password:', this.state.user.password);
+
+    const username = encodeURIComponent(this.state.user.username);
+    const email = encodeURIComponent(this.state.user.email);
+    const password = encodeURIComponent(this.state.user.password);
+    const formData = `username=${username}&email=${email}&password=${password}`;
+  
+
+
+    // console.log('state', data)
+    fetch('/signup',{
+        method:'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: formData 
+    }).then((res) => {   
+      if (res.status !== 200) {
+       return res.json().then((data) => {
+      //   console.log('data',data)
+          const errors = data.errors ? data.errors : {};
+          this.setState({
+            errors
+          });
+       });   
+      }else{
+        this.setState({
+          errors: {}
+        });
+        this.props.history.push('/')
+            }   
+       }).catch((err) => {
+        console.log('err',err)
+     })
   }
 
-  /**
-   * Render the component.
-   */
+
   render() {
     return (
       <SignUpForm

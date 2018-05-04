@@ -13,6 +13,7 @@ export default class AddEmployee extends Component {
    constructor(){
          super()
          this.state = {
+           errors:[],
            FirstName: '',
            LastName:'',
            Position:'',
@@ -43,23 +44,57 @@ export default class AddEmployee extends Component {
           fetch('/employee/add',{
               method:'POST',
               headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify(data)
-          }).then((res) => {
-              if(res.status >= 400){
-                throw new Error("Bad response from server");
-              }
-              return res.json();
-          }).then( (data) => {
-              if(data ){
-                 this.props.history.push('/');
+              body: data
+          }).then((res) => {  
+              
+            console.log(res.status)
+            if (res.status !== 200) {
                 
-              }
+             return res.json().then((data) => {
+             //    console.log('data', data.errors[0].msg)
+                const errors = data.errors ? data.errors : {};
+                this.setState({
+                  errors
+                });
+             });   
+            } else{
+            //   this.props.history.push('/')
+            //         // change the component-container state
+            //         this.setState({
+            //           errors: {}
+            //         });
+                  }   
+            
           }).catch((err) => {
               console.log(err)
           })
        
     }
 
+
+//     fetch('/signup',{
+//         method:'POST',
+//         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+//         body: formData 
+//     }).then((res) => {   
+//       if (res.status !== 200) {
+//        return res.json().then((data) => {
+//           const errors = data.errors ? data.errors : {};
+//           this.setState({
+//             errors
+//           });
+//        });   
+//       }else{
+//         this.props.history.push('/')
+//               // change the component-container state
+//               this.setState({
+//                 errors: {}
+//               });
+//             }   
+//        }).catch((err) => {
+//         console.log('err',err)
+//      })
+//   }
 
     handleInputChange(e){
         const target = e.target;
@@ -79,7 +114,8 @@ export default class AddEmployee extends Component {
     }
   
     render(){
-    
+     
+      
         return (
         <div className="container">
          <h1>Add Employee</h1>
@@ -91,32 +127,35 @@ export default class AddEmployee extends Component {
             hintText=" First Name"
             floatingLabelText=" First Name"
             fullWidth={true}
-            type="text"  name="FirstName"  onChange={this.handleInputChange} minLength="1" maxLength="150" required="true"
+            type="text"  name="FirstName"  onChange={this.handleInputChange} minLength="1" maxLength="150" 
+
             /><br />
          <TextField
             hintText=" Last Name"
             floatingLabelText=" Last Name"
             fullWidth={true}
-            type="text"  name="LastName"  onChange={this.handleInputChange} minLength="1" maxLength="150" required
+            type="text"  name="LastName"  onChange={this.handleInputChange} minLength="1" maxLength="150" 
+            //errorText={this.state.errors[0].msg}
+
              /><br />
 
                      <TextField
             hintText="Position"
             floatingLabelText="Position"
             fullWidth={true}
-            type="text"  name="Position"  onChange={this.handleInputChange} minLength="1" maxLength="150" required
+            type="text"  name="Position"  onChange={this.handleInputChange} minLength="1" maxLength="150" 
              /><br />
                      <TextField
             hintText=" Email"
             floatingLabelText="Email"
             fullWidth={true}
-            type="email"  name="Email"  onChange={this.handleInputChange} minLength="1" maxLength="150"  required
+            type="email"  name="Email"  onChange={this.handleInputChange} minLength="1" maxLength="150"  
              /><br />
            <TextField
             hintText="Phone Number"
             floatingLabelText="Phone Number"
             fullWidth={true}
-            type="tel"  name="Phone"  onChange={this.handleInputChange} minLength="1" maxLength="20"  pattern="^[0-9-+s()]*$"  required/>
+            type="tel"  name="Phone"  onChange={this.handleInputChange} minLength="1" maxLength="20"  pattern="^[0-9-+s()]*$"  />
             <br />
             <br/>
     

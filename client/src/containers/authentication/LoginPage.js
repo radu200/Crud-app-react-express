@@ -34,13 +34,40 @@ class LoginPage extends React.Component {
 
     console.log('email:', this.state.user.email);
     console.log('password:', this.state.user.password);
+
+    const email = encodeURIComponent(this.state.user.email);
+    const password = encodeURIComponent(this.state.user.password);
+    const formData = `email=${email}&password=${password}`;
+
+         // console.log('state', data)
+    fetch('/login',{
+      method:'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: formData 
+     }).then((res) => {   
+     if (res.status !== 200) {
+     return res.json().then((data) => {
+    //   console.log('data',data)
+        const errors = data.errors ? data.errors : {};
+        this.setState({
+          errors
+        });
+      });   
+      } else{
+     
+        this.setState({
+        errors: {}
+      });
+
+      this.props.history.push('/')
+          }   
+     }).catch((err) => {
+      console.log('err',err)
+   })
+
   }
 
-  /**
-   * Change the user object.
-   *
-   * @param {object} event - the JavaScript event object
-   */
+ 
   changeUser(event) {
     const field = event.target.name;
     const user = this.state.user;
@@ -51,9 +78,7 @@ class LoginPage extends React.Component {
     });
   }
 
-  /**
-   * Render the component.
-   */
+  
   render() {
     return (
       <LoginForm
