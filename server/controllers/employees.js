@@ -1,26 +1,26 @@
 const db = require('../config/database.js')
+const expressValidator = require('express-validator');
 
 module.exports.getEmployees = (req, res) => {
-    db.then((conn) => conn.query('SELECT * FROM employees'))
-      .then(([rows, fields]) =>
-        res.json(rows))
-       .catch((err) => {
+    db.query('SELECT * FROM employees  WHERE user_id = ? ', [req.user.id], (err,rows) => {
+      if (err){
         console.log('[mysql error]', err)
-      }) 
+      } else {
+         res.json(rows)
+      }
+    })
 
-
-     console.log('data', req.session)
   }
 
 
  module.exports.addEmployee = (req, res) => {
+
     const FirstName = req.body.FirstName;
     const LastName = req.body.LastName;
     const Position = req.body.Position;
     const Email = req.body.Email;  
     const Phone = req.body.Phone;  
     const Date = req.body.Date;  
-
 
     //validation
     req.checkBody('FirstName', 'FirstName field cannot be empty.').notEmpty();
@@ -48,37 +48,41 @@ module.exports.getEmployees = (req, res) => {
       position:Position,
       email:Email,
       phone_number:Phone,
-      Date_hired:Date
+      Date_hired:Date,
+      user_id:req.user.id
     }
   
-    db.then((conn) => conn.query('INSERT INTO employees SET ?', employees))
-      .then(([rows, fields]) =>
-        res.json(rows))
-      .catch((err) => {
+    db.query('INSERT INTO employees SET ?', employees, (err, rows) => {
+      if (err){
         console.log('[mysql error]', err)
-      })
-    
+      }else{
+        res.redirect('/')
+      }
+    }) 
   }
   
   ///detail page
   module.exports.getEmployeeDetails =  (req, res) => {
-    db.then((conn) => conn.query('SELECT * FROM employees WHERE id = ?', [req.params.id]))
-      .then(([rows, fields]) =>
-        res.json(rows))
-      .catch((err) => {
+    db.query('SELECT * FROM employees WHERE id = ?', [req.params.id], (err,rows) => {
+      if (err){
         console.log('[mysql error]', err)
-      })
-  
+      } else{
+         res.json(rows)
+      }
+    })
+
   }
   
   
    module.exports.getEditEmployee  = (req, res) => {
-    db.then((conn) => conn.query('SELECT * FROM employees WHERE id = ?', [req.params.id]))
-      .then(([rows, fields]) =>
-        res.json(rows))
-      .catch((err) => {
+    db.query('SELECT * FROM employees WHERE id = ?', [req.params.id], (err,rows) => {
+      if (err){
         console.log('[mysql error]', err)
-      })
+      } else{
+        db.query('SELECT LAST')
+         res.json(rows)
+      }
+    }) 
   }
    
   module.exports.postEditeEmployee  = (req, res) => {
@@ -98,7 +102,7 @@ module.exports.getEmployees = (req, res) => {
     req.checkBody('Position', 'Position must be between 1 and 150 characters.').len(1,150);
     req.checkBody('Email', 'Email is not valid .').isEmail();
     req.checkBody('Email', 'Email must be between 1 and 150 characters.').len(1,150);
-    req.checkBody('Phone', 'Email must be between 1 and 150 characters.').len(1,20);
+    req.checkBody('Phone', 'Phone must be between 1 and 150 characters.').len(1,20);
     req.checkBody({'Phone':{ optional: {  options: { checkFalsy: true }},isDecimal: {  errorMessage: 'The Number must be a decimal'} } });
     req.checkBody('Date', 'Phone number must be between 1 and 150 characters.').len(1,20);
    
@@ -117,24 +121,25 @@ module.exports.getEmployees = (req, res) => {
     }
 
 
-    db.then((conn) => conn.query(`UPDATE employees SET ?  WHERE id =${req.params.id}` , employees))
-      .then(([rows, fields]) =>
-        console.log('employee details edited'),
-        res.redirect('/') )
-      .catch((err) => {
-        console.log('[mysql error]', err)
-      })
+    db.query(`UPDATE employees SET ?  WHERE id =${req.params.id}` , employees, (err,rows) => {
+        if (err){
+          console.log('[mysql error]', err)
+        } else{
+           res.redirect('/')
+        }
+      
+    })
+       
   }
   
   
   //delete post 
   module.exports.deleteEmployee =  (req, res) => {
-    db.then((conn) => conn.query(`DELETE FROM employees WHERE  id =${req.params.id}`))
-      .then(([rows, fields]) =>
-       console.log('employee deleted'),
-       res.redirect('/'))
-      .catch((err) => {
+    db.query(`DELETE FROM employees WHERE  id =${req.params.id}`, (err, rows) => {
+      if (err){
         console.log('[mysql error]', err)
-      })
-  
+      } else{
+         res.redirect('/')
+      }
+    })
   }

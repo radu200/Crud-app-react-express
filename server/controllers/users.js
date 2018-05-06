@@ -84,178 +84,124 @@ module.exports.postSignUp = (req, res) => {
   const password = req.body.password;
 
   const validationResult = validateSignupForm(req.body);
+  //validate form
 
-
-  new Promise(function (resolve, reject) {
-    db.then((conn) => conn.query('SELECT users.email FROM users WHERE email = ?', [email])
-      .then(([rows, fields]) => {
-
-        if (rows.length) {
-          resolve(res.status(400).json({
-            errors: 'email already taken'
-          }))
-        } else {
-          resolve(
-
-            bcrypt.hash(password, saltRounds).then((hash) => {
-              // Store hash in your password DB.
-
-              let user = {
-                username: username,
-                email: email,
-                password: hash
-              }
-
-              db.then((conn) => conn.query('INSERT INTO users SET ?', user))
-                .then(([rows, fields]) =>
-
-                  res.redirect('/'))
-                 .catch((err) => {
-                   console.log(' err creat new user authentication [mysql error]', err)
-                 })
-
-            }) //bcrypt ends
-
-          )
-        }
-      }).catch((err) => {
-        console.log(' err check email on signup authentication[mysql error]', err)
-      })
-    )
-
-  }).catch((err) => {
-    console.log('err  sign-up')
-  })
-
-  // console.log('result',result)
-
-
-
-
-  //   if (rows.length === true){
-  //    return new Promise ((resolve,reject) => {
-  //       resolve (res.redirect('/signup').json({
-  //         Errmessage:'this email already taken'
-  //       }))
-  //    })
-  //  } else {
-  //     resolve(res.json({
-  //       success:'everything ok'
-  //     }))
-
-  // }
-
-
-
-
-
-  // new Promise(function(resolve, reject) {
-
-  //   setTimeout(() => resolve(1)); // (*)
-
-  // }).then(function(result) { // (**)
-  //  if (result === 1 ){
-  //   return new Promise((resolve, reject) => { // (*)
-  //     setTimeout(() => resolve(result * 2), 1000);
-  //   });
-  //  }
-  //   console.log(result); // 1
-  //   return result * 2;
-
-  // }).then(function(result) { // (***)
-
-  //   console.log(result); // 2
-  //   return result * 2;
-
-  // }).then(function(result) {
-
-  //   console.log(result); // 4
-  //   return result * 2;
-
-  // });
-
-  //   if (!validationResult.success) {
-  //   return  res.status(400).json({
-  //    success: false,
-  //    message: validationResult.message,
-  //    errors: validationResult.errors
-  //  });
-
-  //  } else {
-
-
-  //    db.then((conn) => conn.query('SELECT * FROM users WHERE email = ?', [email])
-  //     .then(([rows,fields]) =>  {
-
-  //     if (rows.length === true){
-  //       console.log('email taken')
-  //       return res.redirect('/signup').json({
-  //         message:'this email already taken'
-  //       })
-  //       console.log('email taken')
-  //       }
-  //    })
-  //   )
-
-
-
-
-
-
-  // db.then((conn) => conn.query('SELECT * FROM users WHERE email = ?', [email])
-  // .then(([rows, fields]) => {
-
-  // if (rows.length === true){
-  //   console.log('email taken')
-  //   // return res.redirect('/signup').json({
-  //   //   Errmessage:'this email already taken'
-  //   // })
-
-
-  // } else {
-
-
-  //       }
-
-  //     }))
-  //     .catch((err) => {
-  //       console.log('[mysql error]', err)
-  //     })
-
-  //  }
-
-
-
-
-  //bcrypt ends
-
-
-
-
-
-
-
-
-};
-
-module.exports.postLogin = (req, res, next) => {
-
-
-  const email = req.body.email;
-  const username = req.body.username;
-  const password = req.body.password;
-
-  const validationResult = validateLoginForm(req.body);
   if (!validationResult.success) {
     return res.status(400).json({
       success: false,
       message: validationResult.message,
       errors: validationResult.errors
-    });
+    })
+
+  } else {
+
+    return CheckEmail()
+  }
+
+
+  function CheckEmail() {
+    db.query('SELECT users.email FROM users WHERE email = ?', [email], (err, rows) => {
+      if (rows.length) {
+        return res.status(400).json({
+          errorEmail: 'This email already exists'
+        })
+      } else {
+
+        return CreateUser()
+      }
+    })
+  }
+
+
+  function CreateUser() {
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+      console.log(hash)
+      let user = {
+        username: username,
+        email: email,
+        password: hash
+      }
+
+      //create new user
+      db.query('INSERT INTO users SET ?', user, (err, rows) => {
+        if (err) {
+          console.log('[mysql]', err)
+        } else {
+    
+        res.status(200).json({
+          successMsg: 'Your account has been created succefully'
+        }) 
+         
+        }
+      })
+
+    })
+
+  }
+};
+
+module.exports.postLogin = (req, res, next) => {
+
+  const email = req.body.email;
+  const password = req.body.password;
+
+
+  const validationResult = validateLoginForm(req.body);
+
+
+  if (!validationResult.success) {
+    return res.status(400).json({
+      success: false,
+      message: validationResult.message,
+      errors: validationResult.errors
+    })
+
   } else {
 
 
+    passport.authenticate('local-login', {
+      session: true
+    }, (err, user, info) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.status(400).json(info)
+      } else {
+        req.logIn(user, function (err) {
+          if (err) {
+            return next(err);
+          }
+          return res.status(200).json({
+            success: true,
+            message: 'Login success',
+            token: req.session.id,
+
+          })
+        });
+
+      }
+    })(req, res, next);
+
 
   }
+};
+
+
+module.exports.getLogout = function (req, res, next) {
+  req.logout();
+
+  req.session.destroy(function (err) {
+    if (err) {
+      return next(err);
+    } else {
+      // destroy session data
+      req.session = null;
+
+      res.redirect('/login');
+
+    }
+
+  });
 
 };
